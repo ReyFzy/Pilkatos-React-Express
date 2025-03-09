@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  NIS           String   @id @default(uuid())
+  nama          String   @unique
+  kelas         String
+  password      String
+  profilePic    String?
+  role          Role     
+  createAt      DateTime
+  updateAt      DateTime
+  refresh_token String?  @db.Text
+  Ketuas        Ketua[]
+  Wakils        Wakil[]
+}
+
+model Candidate {
+  id       String    @id @default(uuid())
+  banner   String?
+  tahun    String
+  visi     String
+  misi     String
+  program  String
+  createAt DateTime
+  updateAt DateTime
+  Ketua    Ketua     @relation(fields: [ketuaId], references: [id])
+  ketuaId  String
+  Wakil    Wakil     @relation(fields: [wakilId], references: [id])
+  wakilId  String
+}
+
+model Ketua {
+  id         String      @id @default(uuid())
+  User       User        @relation(fields: [userId], references: [NIS])
+  userId     String      @unique
+  Candidates Candidate[]  
+}
+
+model Wakil {
+  id         String      @id @default(uuid())
+  User       User        @relation(fields: [userId], references: [NIS])
+  userId     String      @unique
+  Candidates Candidate[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
