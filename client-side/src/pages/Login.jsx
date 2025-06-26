@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { TailSpin } from "react-loader-spinner";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,7 @@ const Login = () => {
       toast.success("Yeay Berhasil Login!", { duration: 3000 });
 
       setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/home");
       }, 1000);
 
     } catch (error) {
@@ -67,8 +68,17 @@ const Login = () => {
             />
           </div>
           {loading ? (
-            <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-              ...
+            <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition flex items-center justify-center">
+              <TailSpin
+              visible={true}
+              height="16"
+              width="16"
+              color="#FFFFFF"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              />
             </button>
           ) : (
             <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">

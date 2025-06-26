@@ -5,3 +5,7 @@
   --font-geist: "Geist", "sans-serif";
   --font-inter: "Inter", "sans-serif";
 }
+
+*{
+  scroll-behavior: smooth;
+}

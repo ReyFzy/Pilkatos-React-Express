@@ -4,8 +4,9 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-const DashboardLayout = () => {
+const Layout = () => {
   const [name, setName] = useState("");
+  const [role, setRole] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
   const defaultProfilePic = "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
@@ -20,6 +21,7 @@ const DashboardLayout = () => {
       const decoded = jwtDecode(response.data.accessToken);
       
       // Ambil data user berdasarkan NIS
+      setRole(decoded.role);
       fetchUserData(decoded.NIS, response.data.accessToken);
     } catch (error) {
       navigate("/");
@@ -54,32 +56,17 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white p-5">
-        <h2 className="text-xl font-bold mb-5">Dashboard</h2>
-        <ul>
-          <li className="mb-3">
-            <Link to="/dashboard" className="hover:underline">Home</Link>
-          </li>
-          <li className="mb-3">
-            <Link to="/dashboard/users" className="hover:underline">Users</Link>
-          </li>
-          <li className="mb-3">
-            <Link to="/dashboard/candidates" className="hover:underline">Candidates</Link>
-          </li>
-          <li>
-            <Link to="/home" className="hover:underline">Back to Landing page</Link>
-          </li>
-        </ul>
-      </div>
-
+    <div className="bg-neutral-50">
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex flex-col">
         {/* Navbar */}
-        <div className="bg-white shadow p-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">Welcome Back, {name || "..."}</h1>
-
+        <div className="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-50">
+          <img src="/logo.png" alt="Logo" />
+          <ul className="flex gap-12">
+            <li className="text-[18px] font-semibold hover:scale-110 transition-all duration-500"><Link to={"/home#"}>Home</Link></li>
+            <li className="text-[18px] font-semibold hover:scale-110 transition-all duration-500"><Link to={"/home#about"}>About</Link></li>
+            <li className="text-[18px] font-semibold hover:scale-110 transition-all duration-500"><Link t0={"/home#candidates"}>Candidates</Link></li>
+          </ul>
           {/* Profile Section */}
           <div className="relative group flex items-center space-x-3">
             {/* Profile Image */}
@@ -95,24 +82,31 @@ const DashboardLayout = () => {
             <span className="text-gray-700 font-medium flex items-center gap-[2px]">{name} <IoMdArrowDropdown/></span>
 
             {/* Dropdown */}
-            <div className="absolute right-0 mt-40 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-              <ul className="py-2">
-                <Link to={"/profile"}>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Profile</li>
-                </Link>
-                <li
-                  onClick={handleLogout}
-                  className="px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
-                >
-                  Logout
-                </li>
-              </ul>
-            </div>
+                <div className="absolute right-0 mt-44 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                <ul className="py-2">
+                    <Link to="/profile">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link className="w-full">My Profile</Link></li>
+                    </Link>
+                    {role === "ADMIN" && (
+                    <Link to="/dashboard">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            Dashboard
+                        </li>
+                    </Link>
+                    )}
+                    <li
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
+                    >
+                    Logout
+                    </li>
+                </ul>
+                </div>
           </div>
         </div>
 
         {/* Outlet untuk menampilkan konten dari setiap halaman */}
-        <div className="p-6">
+        <div>
           <Outlet />
         </div>
       </div>
@@ -120,4 +114,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+export default Layout;
